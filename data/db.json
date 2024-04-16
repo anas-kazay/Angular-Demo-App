@@ -1,7 +1,34 @@
 {
   "products": [
-    { "id": 1, "name": "Computer", "price": 5600, "checked": true },
-    { "id": 2, "name": "Printer", "price": 3000, "checked": false },
-    { "id": 3, "name": "Smart Phone", "price": 1234, "checked": true }
+    {
+      "id": "1",
+      "name": "Computerr",
+      "price": 5600,
+      "checked": false
+    },
+    {
+      "id": "2",
+      "name": "Printer",
+      "price": 3000,
+      "checked": false
+    },
+    {
+      "id": "3",
+      "name": "Printer",
+      "price": 3000,
+      "checked": false
+    },
+    {
+      "id": "4",
+      "name": "Printer",
+      "price": 3000,
+      "checked": false
+    },
+    {
+      "id": "5f05",
+      "name": "yassin",
+      "price": "44",
+      "checked": true
+    }
   ]
 }
