@@ -16,6 +16,8 @@
             <th>Name</th>
             <th>Price</th>
             <th>Checked</th>
+            <th></th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
@@ -40,9 +42,31 @@
                 <i class="bi bi-trash"></i>
               </button>
             </td>
+            <td>
+              <button
+                (click)="handleEdit(product)"
+                class="btn btn-outline-warning"
+              >
+                <i class="bi bi-pencil"></i>
+              </button>
+            </td>
           </tr>
         </tbody>
       </table>
+      <ul class="nav nav-pills">
+        <li *ngFor="let page of [].constructor(this.totalPages); let i = index">
+          <button
+            [ngClass]="
+              currentPage == i + 1
+                ? 'btn btn-success m-1'
+                : 'btn btn-outline-success m-1'
+            "
+            (click)="handleGotoPage(i + 1)"
+          >
+            {{ i + 1 }}
+          </button>
+        </li>
+      </ul>
     </div>
   </div>
 </div>

@@ -5,6 +5,7 @@ import { ProductService } from '../services/product.service';
 import { Product } from '../model/product.model';
 import { Observable } from 'rxjs';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-products',
@@ -15,35 +16,44 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './products.component.css',
 })
 export class ProductsComponent implements OnInit {
-  searchProducts() {
-    this.productService.searchProducts(this.keyword).subscribe({
-      next: (value) => (this.products = value),
-    });
-  }
   public keyword: string = '';
+  totalPages: number = 0;
+  pageSize: number = 3;
+  currentPage: number = 1;
+  key: string = '';
+
   handleDelete(product: Product) {
     if (confirm('Etes vous sure?'))
       this.productService.deleteProduct(product).subscribe({
         next: (value: void) => {
-          //this.products$ = this.productService.getProducts();
           this.products.filter((p) => p.id != product.id);
         },
       });
   }
 
-  constructor(
-    private http: HttpClient,
-    private productService: ProductService
-  ) {}
+  constructor(private productService: ProductService, private router: Router) {}
+
+  searchProducts() {
+    if (this.keyword != '' && this.key != this.keyword) this.currentPage = 1;
+    this.key = this.keyword;
+    this.productService
+      .searchProducts(this.keyword, this.currentPage, this.pageSize)
+      .subscribe({
+        next: (resp) => {
+          this.products = resp.body as Product[];
+          let totalProducts: number = parseInt(
+            resp.headers.get('x-total-count')!
+          );
+          this.totalPages = Math.ceil(totalProducts / this.pageSize);
+        },
+        error: (err) => {
+          console.log(err);
+        },
+      });
+  }
 
   ngOnInit(): void {
-    this.productService.getProducts(1, 2).subscribe({
-      next: (data) => (this.products = data),
-      error: (err) => {
-        console.log(err);
-      },
-    });
-    //this.products = this.productService.getProducts();
+    this.searchProducts();
   }
 
   handleCheckProduct(product: any) {
@@ -53,5 +63,15 @@ export class ProductsComponent implements OnInit {
       },
     });
   }
+
+  handleGotoPage(page: number) {
+    this.currentPage = page;
+    this.searchProducts();
+  }
+
+  handleEdit(product: Product) {
+    this.router.navigateByUrl(`/editProduct/${product.id}`);
+  }
+
   products: Array<Product> = [];
 }

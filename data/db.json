@@ -2,7 +2,7 @@
   "products": [
     {
       "id": "1",
-      "name": "Computerr",
+      "name": "Computer",
       "price": 5600,
       "checked": false
     },
@@ -29,6 +29,36 @@
       "name": "yassin",
       "price": "44",
       "checked": true
+    },
+    {
+      "name": "dounia",
+      "price": "5",
+      "checked": false,
+      "id": "tBihA8_"
+    },
+    {
+      "name": "Saad",
+      "price": 0,
+      "checked": false,
+      "id": "0AnzXnQ"
+    },
+    {
+      "name": "Saad",
+      "price": "4",
+      "checked": false,
+      "id": "0bHt-Lg"
+    },
+    {
+      "name": "Saad",
+      "price": "4",
+      "checked": false,
+      "id": "cljQOCG"
+    },
+    {
+      "name": "Saad",
+      "price": "4",
+      "checked": false,
+      "id": "Ml2d1gb"
     }
   ]
 }
