@@ -1,0 +1,28 @@
+<div class="p-3">
+  <div class="card">
+    <div class="card-body">
+      <ul class="nav nav-pills">
+        <li>
+          <label class="border border-info p-1 bg-info rounded m-1"
+            >Pages :{{ _appState.productState.totalPages }}</label
+          >
+        </li>
+        <li>
+          <label class="border border-info p-1 bg-info rounded m-1"
+            >Size :{{ _appState.productState.pageSize }}</label
+          >
+        </li>
+        <li>
+          <label class="border border-info p-1 bg-info rounded m-1"
+            >Total :{{ _appState.productState.totalProducts }}</label
+          >
+        </li>
+        <li>
+          <label class="border border-info p-1 bg-info rounded m-1"
+            >Checked :{{ totalCheckedProducts() }}</label
+          >
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

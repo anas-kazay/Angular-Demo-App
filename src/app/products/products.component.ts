@@ -1,4 +1,4 @@
-import { Component, NgModule, OnInit } from '@angular/core';
+import { Component, Input, NgModule, OnInit } from '@angular/core';
 import { CommonModule, NgFor } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { ProductService } from '../services/product.service';
@@ -6,6 +6,7 @@ import { Product } from '../model/product.model';
 import { Observable } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { AppStateService } from '../services/app-state.service';
 
 @Component({
   selector: 'app-products',
@@ -16,38 +17,63 @@ import { Router } from '@angular/router';
   styleUrl: './products.component.css',
 })
 export class ProductsComponent implements OnInit {
-  public keyword: string = '';
-  totalPages: number = 0;
-  pageSize: number = 3;
-  currentPage: number = 1;
   key: string = '';
 
   handleDelete(product: Product) {
     if (confirm('Etes vous sure?'))
       this.productService.deleteProduct(product).subscribe({
         next: (value: void) => {
-          this.products.filter((p) => p.id != product.id);
+          // this.appState.productState.products.filter(
+          //   (p: any) => p.id != product.id
+          // );
+          this.searchProducts();
         },
       });
   }
 
-  constructor(private productService: ProductService, private router: Router) {}
+  constructor(
+    private productService: ProductService,
+    private router: Router,
+    private appState: AppStateService
+  ) {}
+
+  get _appState() {
+    return this.appState;
+  }
 
   searchProducts() {
-    if (this.keyword != '' && this.key != this.keyword) this.currentPage = 1;
-    this.key = this.keyword;
+    //this.appState.setProductState({ status: 'LOADING' });
+    if (
+      this.appState.productState.keyword != '' &&
+      this.key != this.appState.productState.keyword
+    )
+      this.appState.productState.currentPage = 1;
+    this.key = this.appState.productState.keyword;
     this.productService
-      .searchProducts(this.keyword, this.currentPage, this.pageSize)
+      .searchProducts(
+        this.appState.productState.keyword,
+        this.appState.productState.currentPage,
+        this.appState.productState.pageSize
+      )
       .subscribe({
         next: (resp) => {
-          this.products = resp.body as Product[];
+          let products = resp.body as Product[];
           let totalProducts: number = parseInt(
             resp.headers.get('x-total-count')!
           );
-          this.totalPages = Math.ceil(totalProducts / this.pageSize);
+
+          let totalPages = Math.ceil(
+            totalProducts / this.appState.productState.pageSize
+          );
+          this.appState.setProductState({
+            products: products,
+            totalProducts: totalProducts,
+            totalPages: totalPages,
+            status: 'LOADED',
+          });
         },
         error: (err) => {
-          console.log(err);
+          this.appState.setProductState({ status: 'ERROR', errorMessage: err });
         },
       });
   }
@@ -65,13 +91,11 @@ export class ProductsComponent implements OnInit {
   }
 
   handleGotoPage(page: number) {
-    this.currentPage = page;
+    this.appState.productState.currentPage = page;
     this.searchProducts();
   }
 
   handleEdit(product: Product) {
     this.router.navigateByUrl(`/editProduct/${product.id}`);
   }
-
-  products: Array<Product> = [];
 }
